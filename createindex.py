@@ -9,6 +9,7 @@ import sys
 import string
 import json
 reload(sys)
+#####
 sys.setdefaultencoding('utf-8')
 
 index = defaultdict(list)
