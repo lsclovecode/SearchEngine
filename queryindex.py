@@ -1,9 +1,11 @@
 import math
 
 
+# d is a dictionary
 def parseQuery(q):
     q = q.strip()
     return q.spilt(" ")
+
 
 def getDocsHaveThisWord(term):  # given a single term, return all docs that contains this term
     return [int(x.keys()[0]) for x in d[term]['docs']]  # d[term]['doc'] returns a list of dictionaries
@@ -25,16 +27,6 @@ def getPosition(term, docid):
     return posLists
 
 
-def getTfidfValue(term, docid):
-    tf = 0
-    df = 0
-    df = d[term]['df']
-    for eachdoc in d[term]['docs']:
-        if eachdoc.has_key(docid):
-            tf = eachdoc[docid]['tf']
-    return (1 + math.log(tf)) * (math.log(500.0 / df))
-
-
 # give a query, first parse it into term list, for each term find the docs that contains the term,
 # then use the intersect function to find the docs that contains all the words;
 
@@ -43,6 +35,7 @@ def checkNGramPosition(posLists):  # given a sequence of each term's position li
         posLists[i] = [x - i for x in posLists[i]]
     result = intersectLists(posLists)
     return result
+
 
 def textQueryDocs(termList):
     for term in termList:
@@ -66,4 +59,14 @@ def phaseQueryDocs(termList):  # given a list of terms
             finalList.append(docid)
     return finalList
 
-def rankDocuments(docList):
+
+def computeCosineSimilarity(queryvector, docvector, querylength, doclength):  # vector1, vector2 are two lists with same length
+                          # length is the length of a doc vector
+
+
+
+def rankDocuments(docList, queryvector):  # docList is a list of docids, you should calculate the similarity of the qvecor of each docid's vecror
+
+# then rank, return a ranked list
+
+
