@@ -58,15 +58,44 @@ def phaseQueryDocs(termList):  # given a list of terms
         if len(result) != 0:
             finalList.append(docid)
     return finalList
+# vector1, vector2 are two lists with same length
+# length is the length of a doc vector
+
+# dic1 of query tf-idf
+# dic2 of document tf-idf
+def getQueryVector(termList):
+    queryvector = []
+    querylength = 0
+    for term in termList:
+        queryvector.append(dic1[term])
+        querylength = querylength + dic1[term] * dic1[term]
+    querylength = math.sqrt(querylength)
+    for i in range(len(queryvector)):
+        queryvector[i] = queryvector[i] / querylength
+
+def computeCosineSimilarity(queryvector, docvector, doclength):
+    vectorsum = 0
+    for i in range(len(queryvector)):
+        vectorsum = queryvector[i] * docvector[i] + vectorsum
+    return vectorsum / math.sqrt(doclength)
 
 
-def computeCosineSimilarity(queryvector, docvector, querylength, doclength):  # vector1, vector2 are two lists with same length
-                          # length is the length of a doc vector
-
-
-
-def rankDocuments(docList, queryvector):  # docList is a list of docids, you should calculate the similarity of the qvecor of each docid's vecror
-
+# docList is a list of docids, you should calculate the similarity of the qvecor of each docid's vector
 # then rank, return a ranked list
+def rankDocuments(docList, termList):
+    scoredic = {}
+    queryvector = getQueryVector(termList)
+    for docid in docList:
+        doclength, docvector = dic2[docid][termList]
+        score = computeCosineSimilarity(queryvector, docvector, doclength)
+        scoredic[score] = docid
+    sortedscore = sorted(scoredic.keys(), cmp=None, key=None, reverse=False)
+    rank = []
+    for i in sortedscore:
+        rank.append(scoredic[i])
+    return rank
+
+
+
 
 
