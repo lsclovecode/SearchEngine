@@ -97,8 +97,10 @@ for term, doc in index.iteritems():
         tf = 0
         if eachdoc[1][0][0] == 1:
             tf = 20 + len(eachdoc[1][1])
+            eachdocsummary[docid]['t'] = 1
         elif eachdoc[1][0][0] == 0:
             tf = len(eachdoc[1][1])
+            eachdocsummary[docid]['t'] = 0
         eachdocsummary[docid]['tf'] = tf
         eachdocsummary[docid]['p'] = eachdoc[1][1]
         finalindex[term]['docs'].append(eachdocsummary)
