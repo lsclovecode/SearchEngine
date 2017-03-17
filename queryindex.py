@@ -4,6 +4,7 @@ import re
 import math
 import numpy as np
 import time
+import json
 from nltk.stem import SnowballStemmer
 stemmer = SnowballStemmer("english")
 from pymongo import MongoClient
@@ -14,8 +15,11 @@ length = db.docInfo
 idurl = db.urlIndex
 titleindex = db.titleIndex
 
+prfile = 'rank2.json'
+prfp = open(prfile, 'r')
+pagerank = json.load(prfp)
 
-
+#@profile
 def tokenize(text):
     try:
         text_tokenized = word_tokenize(text)
@@ -166,17 +170,16 @@ def findDocsInTitle(termList, docList):
 
 def findDocsInTitleByTitleIndex(termList):
     lists = []
-    for term in termList:
-        d = titleindex.find_one({"_id": term})
-        lists.append([int(x) for x in d['docid'].keys()])
+    d = titleindex.find({"_id": {"$in" : termList}})
+    for doc in d:
+        lists.append([int(x) for x in doc['docid'].keys()])
     docList = intersectLists(lists)
 
     finalList = []
     for docid in docList:
         temp = []
-        for term in termList:
-            d = titleindex.find_one({"_id": term})
-            temp.append(d['docid'][str(docid)])
+        for doc in d:
+            temp.append(doc['docid'][str(docid)])
         result = checkNGramPosition(temp)
         if len(result) != 0:
             finalList.append(docid)
@@ -192,6 +195,12 @@ def rankDocuments(docList, termList, queryvector):
         docvector = getDocVector(termList, docid)
         #print docvector
         score = computeCosineSimilarity(queryvector, docvector)
+        if str(docid) in pagerank:
+            prscore = pagerank[str(docid)]
+            # harmonic mean of tf-idf and PageRank scores.
+            score = 2 * (score * prscore) / (score + prscore)
+        #else:
+        #    score = 2 * (score * 0.001) / (score + 0.001)
         #print "score", score
         scoredic[score] = docid
 
