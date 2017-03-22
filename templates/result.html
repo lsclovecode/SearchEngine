@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <form action = "http://localhost:5000/result" method = "POST"><br>
+				<input type="search" class="search" size = "50"name = "Name"><br>
+				<input type="submit" class="button" name="submit" value="Zot Search">
+				<input type="submit" class="button" name="lucky" value="I'm Feeling Lucky">
+    </form>
+    <br>
+
+         {% for dic in Data %}
+
+
+                    <a href={{ dic['url'] }}>{{ dic['url'] }} </a> <br>
+
+                    {{dic['content'] }}
+
+            <br>
+            <br>
+            <br>
+            <br>
+         {% endfor %}
+
+</body>
+</html>
